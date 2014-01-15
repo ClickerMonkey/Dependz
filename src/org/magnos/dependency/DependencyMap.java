@@ -1,3 +1,18 @@
+/* 
+ * NOTICE OF LICENSE
+ * 
+ * This source file is subject to the Open Software License (OSL 3.0) that is 
+ * bundled with this package in the file LICENSE.txt. It is also available 
+ * through the world-wide-web at http://opensource.org/licenses/osl-3.0.php
+ * If you did not receive a copy of the license and are unable to obtain it 
+ * through the world-wide-web, please send an email to magnos.software@gmail.com 
+ * so we can send you a copy immediately. If you use any of this software please
+ * notify me via our website or email, your feedback is much appreciated. 
+ * 
+ * @copyright   Copyright (c) 2011 Magnos Software (http://www.magnos.org)
+ * @license     http://opensource.org/licenses/osl-3.0.php
+ *              Open Software License (OSL 3.0)
+ */
 
 package org.magnos.dependency;
 
@@ -38,55 +53,60 @@ public class DependencyMap<K, V>
     }
 
     /**
-     * Adds a dependency to the map.
-     * 
-     * @param child
-     *        The key that is a dependent of the given dependency.
-     * @param dependency
-     *        The key that is the parent of the child dependent.
+     * States that <code>a</code> depends on <code>b</code>.
      */
-    public void addDependency( K child, K dependency )
+    public void addDependency( K a, K b )
     {
-        addToListMap( child, dependency, dependents );
+        getDependents( b ).add( a );
     }
 
     /**
-     * Adds a dependent to the map.
-     * 
-     * @param parent
-     *        The key that is the parent of the child dependent.
-     * @param dependent
-     *        The key that is a child of the given dependency.
+     * States that <code>b</code> depends on <code>a</code>.
      */
-    public void addDependent( K parent, K dependent )
+    public void addDependent( K a, K b )
     {
-        addToListMap( dependent, parent, dependents );
+        getDependents( a ).add( b );
     }
 
+    /**
+     * Returns a {@link Set} of all things dependent on the given parent.
+     * 
+     * @param parent
+     *        The parent to get the dependents of.
+     * @return
+     */
+    public Set<K> getDependents( K parent )
+    {
+        Set<K> set = dependents.get( parent );
+
+        if (set == null)
+        {
+            set = new HashSet<K>();
+            dependents.put( parent, set );
+        }
+
+        return set;
+    }
+
+    /**
+     * Adds a value to the given key.
+     * 
+     * @param key
+     *      The key.
+     * @param value
+     *      The value attached to the key.
+     */
     public void add( K key, V value )
     {
         values.put( key, value );
     }
 
     /**
+     * Converts the values and dependencies in the map into a {@link Collection}
+     * of {@link DependencyNode}s.
      * 
-     * @param key
-     * @param value
-     * @param map
+     * @return The reference to the collection of {@link DependencyNode}s.
      */
-    private <A, B> void addToListMap( A key, B value, Map<A, Set<B>> map )
-    {
-        Set<B> list = map.get( key );
-
-        if (list == null)
-        {
-            list = new HashSet<B>();
-            map.put( key, list );
-        }
-
-        list.add( value );
-    }
-
     public Collection<DependencyNode<V>> getDependencyNodes()
     {
         Map<K, DependencyNode<V>> nodeMap = new HashMap<K, DependencyNode<V>>();
