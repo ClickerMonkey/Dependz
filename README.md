@@ -32,6 +32,6 @@ assertEquals( Arrays.asList( 3, 4, 1, 0, 2 ), graph.getOutput() );
 - [Dependz-1.0.jar](https://github.com/ClickerMonkey/Dependz/raw/master/build/Dependz-1.0.jar)
 - [Dependz-src-1.0.jar](https://github.com/ClickerMonkey/Dependz/raw/master/build/Dependz-1.0-src.jar) - includes source code
 
-#### Projects using testility:
+#### Projects using Dependz:
 
 - [Rekord](https://github.com/ClickerMonkey/Rekord)
