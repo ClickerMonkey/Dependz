@@ -16,255 +16,168 @@
 
 package org.magnos.dependency;
 
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+
 /**
- * An object which has a value and a list of dependencies and dependents.
+ * A node in a dependency graph and tree that has a set of dependencies (edges
+ * on the graph) and when structured into a tree with a
+ * {@link DependencyAnalyzer} has an index and depth in the tree.
  * 
  * @author Philip Diffenderfer
- *
+ * 
  * @param <T>
- * 		The value type.
+ *        The type of value stored in the node.
  */
 public class DependencyNode<T> implements Serializable
 {
-	
-    private static final long serialVersionUID = 1L;
-    
+
+	private static final long serialVersionUID = 1L;
+
 	private T value;
-	
+
 	private int depth;
-	
-	private final Set<DependencyNode<T>> dependents = new HashSet<DependencyNode<T>>();
-	
+
+	private int index;
+
 	private final Set<DependencyNode<T>> dependencies = new HashSet<DependencyNode<T>>();
-	
+
 	/**
-	 * Instantiates a new DependencyItem without a value.
+	 * Instantiates a new DependencyNode without a value.
 	 */
 	public DependencyNode()
 	{
 	}
-	
+
 	/**
 	 * Instantiates a new DependencyNode.
 	 * 
 	 * @param value
-	 * 		The value.
+	 *        The value of the node.
 	 */
 	public DependencyNode( T value )
 	{
 		this.value = value;
 	}
-	
+
 	/**
-	 * Adds a dependency and adds this as a dependent to the dependency.
+	 * Adds a dependency to this node.
 	 * 
 	 * @param dependency
-	 * 		The dependency to add.
+	 *        The dependency to add.
 	 */
 	public void addDependency( DependencyNode<T> dependency )
 	{
-		if ( dependency == this )
-		{
-			throw new RuntimeException( "A DependencyNode cannot depend on itself" );
-		}
-		
 		dependencies.add( dependency );
-		dependency.dependents.add( this );
 	}
-	
+
 	/**
-	 * Adds a dependent and adds this as a dependency to the dependent.
-	 * 
-	 * @param dependent
-	 * 		The dependent to add.
-	 */
-	public void addDependent( DependencyNode<T> dependent )
-	{
-		if ( dependent == this )
-		{
-			throw new RuntimeException( "A DependencyNode cannot depend on itself" );
-		}
-		
-		dependents.add( dependent );
-		dependent.dependencies.add( this );
-	}
-	
-	/**
-	 * Removes the given dependency and removes this as a dependent from the dependency.
+	 * Removes the given dependency from this node.
 	 * 
 	 * @param dependency
-	 * 		The dependency to remove.
+	 *        The dependency to remove.
 	 */
 	public void removeDependency( DependencyNode<T> dependency )
 	{
 		dependencies.remove( dependency );
-		dependency.dependents.remove( this );
 	}
-	
-	/**
-	 * Removes the given dependent and removes this as a dependency from the dependent.
-	 * 
-	 * @param dependent
-	 * 		The dependent to remove.
-	 */
-	public void removeDependent( DependencyNode<T> dependent )
-	{
-		dependents.remove( dependent );
-		dependent.dependencies.remove( this );
-	}
-	
-	/**
-	 * Clears all dependents and removes this as a dependency from each one.
-	 * 
-	 * @return
-	 * 		A set of the dependents cleared.
-	 */
-	public Set<DependencyNode<T>> clearDependents()
-	{
-		Set<DependencyNode<T>> dependentsCopy = new HashSet<DependencyNode<T>>( dependents );
-		
-		for ( DependencyNode<T> dependent : dependentsCopy )
-		{
-			dependent.removeDependency( this );
-		}
-		
-		return dependentsCopy;
-	}
-	
-	/**
-	 * Clears all dependencies and removes this as a dependent from each one.
-	 * 
-	 * @return
-	 * 		A set of the dependencies cleared.
-	 */
-	public Set<DependencyNode<T>> clearDependencies()
-	{
-		Set<DependencyNode<T>> dependenciesCopy = new HashSet<DependencyNode<T>>( dependencies );
-		
-		for ( DependencyNode<T> dependency : dependenciesCopy )
-		{
-			dependency.removeDependent( this );
-		}
-		
-		return dependenciesCopy;
-	}
-	
-	/**
-	 * Whether this node has dependents.
-	 * 
-	 * @return
-	 * 		True if this node has dependents, otherwise false.
-	 */
-	public boolean hasDependents()
-	{
-		return !dependents.isEmpty();
-	}
-	
+
 	/**
 	 * Whether this node has dependencies.
 	 * 
-	 * @return
-	 * 		True if this node has dependencies, otherwise false.
+	 * @return True if this node has dependencies, otherwise false.
 	 */
 	public boolean hasDependencies()
 	{
 		return !dependencies.isEmpty();
 	}
-	
+
 	/**
-	 * The value which has dependents and dependencies.
+	 * The value which has dependencies.
 	 * 
-	 * @return
-	 * 		The reference to the value.
+	 * @return The reference to the value.
 	 */
 	public T getValue()
 	{
 		return value;
 	}
-	
+
 	/**
-	 * Sets the value which has dependents and dependencies.
+	 * Sets the value which has dependencies.
 	 * 
 	 * @param value
-	 * 		The new value.
+	 *        The new value.
 	 * @return
 	 */
 	public void setValue( T value )
 	{
 		this.value = value;
 	}
-	
+
 	/**
-	 * The depth of this node in the dependency tree. The lower
-	 * the depth, the least number of dependencies. If the depth is
-	 * zero, it has no dependencies.
+	 * The depth of this node in the dependency tree. The lower the depth, the
+	 * least number of dependencies. If the depth is zero, it has no
+	 * dependencies.
 	 * 
-	 * @return
-	 * 		The depth of this node in the dependency tree.
+	 * @return The depth of this node in the dependency tree.
 	 */
 	public int getDepth()
 	{
 		return depth;
 	}
-	
+
 	/**
 	 * Sets the depth of this node.
 	 * 
 	 * @param depth
-	 * 		The depth of this node in the dependency tree.
+	 *        The depth of this node in the dependency tree.
 	 */
 	protected void setDepth( int depth )
 	{
 		this.depth = depth;
 	}
-	
+
 	/**
-	 * The set of dependents.
+	 * The index of this node in the dependency tree. The lower the index the
+	 * lower number of dependencies. All nodes with a lesser index are potential
+	 * dependencies.
 	 * 
-	 * @return
-	 * 		The reference to the set of dependents.
+	 * @return The index of this node in the dependency tree.
 	 */
-	public Set<DependencyNode<T>> getDependents()
+	public int getIndex()
 	{
-		return dependents;
+		return index;
 	}
-	
+
+	/**
+	 * Sets the index of this node.
+	 * 
+	 * @param index
+	 *        The index of this node in the dependency tree.
+	 */
+	protected void setIndex( int index )
+	{
+		this.index = index;
+	}
+
 	/**
 	 * The set of dependencies.
 	 * 
-	 * @return
-	 * 		The reference to the set of dependencies.
+	 * @return The reference to the set of dependencies.
 	 */
 	public Set<DependencyNode<T>> getDependencies()
 	{
 		return dependencies;
 	}
-	
-	@Override
-    public int hashCode()
-    {
-		return value == null ? 0 : value.hashCode();
-    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-    public boolean equals( Object obj )
-    {
-	    if ( this == obj )
-		    return true;
-	    if ( obj == null )
-		    return false;
-	    if ( getClass() != obj.getClass() )
-		    return false;
-	    
-	    DependencyNode<T> other = (DependencyNode<T>)obj;
-	    
-	    return ( value == other.value || ( value != null && other.value != null && value.equals( other.value ) ) );
-    }
-	
+	/**
+	 * @return The number of dependencies the node has.
+	 */
+	public int getDependencyCount()
+	{
+		return dependencies.size();
+	}
+
 }

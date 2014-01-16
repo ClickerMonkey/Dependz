@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
-import org.magnos.dependency.DependencyGraph;
+import org.magnos.dependency.DependencyAnalyzer;
 import org.magnos.dependency.DependencyNode;
 
 
@@ -43,15 +43,15 @@ public class TestDependencyGraph
 		value1.addDependency( value3 );
 		value1.addDependency( value4 );
 		
-		DependencyGraph<String> graph = new DependencyGraph<String>();
+		DependencyAnalyzer<String> graph = new DependencyAnalyzer<String>();
 		graph.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
 		
 		assertTrue( graph.isValid() );
-		assertSame( value3, graph.getOutputNodes().get( 0 ) );
-		assertSame( value4, graph.getOutputNodes().get( 1 ) );
-		assertSame( value1, graph.getOutputNodes().get( 2 ) );
-		assertSame( value0, graph.getOutputNodes().get( 3 ) );
-		assertSame( value2, graph.getOutputNodes().get( 4 ) );
+		assertSame( value3, graph.getOrderedNodes()[ 0 ] );
+		assertSame( value4, graph.getOrderedNodes()[ 1 ] );
+		assertSame( value1, graph.getOrderedNodes()[ 2 ] );
+		assertSame( value0, graph.getOrderedNodes()[ 3 ] );
+		assertSame( value2, graph.getOrderedNodes()[ 4 ] );
 	}
 	
 	@Test
@@ -69,7 +69,7 @@ public class TestDependencyGraph
 		value3.addDependency( value4 );
 		value4.addDependency( value0 );
 		
-		DependencyGraph<String> graph = new DependencyGraph<String>();
+		DependencyAnalyzer<String> graph = new DependencyAnalyzer<String>();
 		graph.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
 		
 		assertFalse( graph.isValid() );
@@ -87,7 +87,7 @@ public class TestDependencyGraph
 		value0.addDependency( value1 );
 		value1.addDependency( value0 );
 		
-		DependencyGraph<String> graph = new DependencyGraph<String>();
+		DependencyAnalyzer<String> graph = new DependencyAnalyzer<String>();
 		graph.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
 		
 		assertFalse( graph.isValid() );
@@ -107,7 +107,7 @@ public class TestDependencyGraph
 		value2.addDependency( value0 );
 		value3.addDependency( value1 );
 		
-		DependencyGraph<String> graph = new DependencyGraph<String>();
+		DependencyAnalyzer<String> graph = new DependencyAnalyzer<String>();
 		graph.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
 		
 		assertFalse( graph.isValid() );
@@ -127,17 +127,17 @@ public class TestDependencyGraph
 		value1.addDependency( value3 );
 		value1.addDependency( value4 );
 		
-		DependencyGraph<String> graph = new DependencyGraph<String>();
+		DependencyAnalyzer<String> graph = new DependencyAnalyzer<String>();
 		graph.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
 		
 		assertTrue( graph.isValid() );
 		
-		List<List<DependencyNode<String>>> groups = graph.getDepthGroupNodes();
+		List<DependencyNode<String>>[] groups = graph.getLevelNodes();
 		
-		assertEquals( Arrays.asList( value3, value4 ), groups.get( 0 ) );
-		assertEquals( Arrays.asList( value1 ), groups.get( 1 ) );
-		assertEquals( Arrays.asList( value0 ), groups.get( 2 ) );
-		assertEquals( Arrays.asList( value2 ), groups.get( 3 ) );
+		assertEquals( Arrays.asList( value3, value4 ), groups[ 0 ] );
+		assertEquals( Arrays.asList( value1 ), groups[ 1 ] );
+		assertEquals( Arrays.asList( value0 ), groups[ 2 ] );
+		assertEquals( Arrays.asList( value2 ), groups[ 3 ] );
 	}
 	
 	@Test
@@ -154,17 +154,17 @@ public class TestDependencyGraph
 		value1.addDependency( value3 );
 		value1.addDependency( value4 );
 		
-		DependencyGraph<String> graph = new DependencyGraph<String>();
+		DependencyAnalyzer<String> graph = new DependencyAnalyzer<String>();
 		graph.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
 		
 		assertTrue( graph.isValid() );
 		
-		List<List<String>> groups = graph.getDepthGroups();
+		List<String>[] groups = graph.getLevels();
 		
-		assertEquals( Arrays.asList( "value3", "value4" ), groups.get( 0 ) );
-		assertEquals( Arrays.asList( "value1" ), groups.get( 1 ) );
-		assertEquals( Arrays.asList( "value0" ), groups.get( 2 ) );
-		assertEquals( Arrays.asList( "value2" ), groups.get( 3 ) );
+		assertEquals( Arrays.asList( "value3", "value4" ), groups[ 0 ] );
+		assertEquals( Arrays.asList( "value1" ), groups[ 1 ] );
+		assertEquals( Arrays.asList( "value0" ), groups[ 2 ] );
+		assertEquals( Arrays.asList( "value2" ), groups[ 3 ] );
 	}
 	
 }

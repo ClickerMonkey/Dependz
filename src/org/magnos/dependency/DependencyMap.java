@@ -40,7 +40,7 @@ import java.util.Set;
 public class DependencyMap<K, V>
 {
 
-    private Map<K, Set<K>> dependents;
+    private Map<K, Set<K>> dependencies;
     private Map<K, V> values;
 
     /**
@@ -48,7 +48,7 @@ public class DependencyMap<K, V>
      */
     public DependencyMap()
     {
-        this.dependents = new LinkedHashMap<K, Set<K>>();
+        this.dependencies = new LinkedHashMap<K, Set<K>>();
         this.values = new LinkedHashMap<K, V>();
     }
 
@@ -57,7 +57,7 @@ public class DependencyMap<K, V>
      */
     public void addDependency( K a, K b )
     {
-        getDependents( b ).add( a );
+        getDependencies( a ).add( b );
     }
 
     /**
@@ -65,7 +65,7 @@ public class DependencyMap<K, V>
      */
     public void addDependent( K a, K b )
     {
-        getDependents( a ).add( b );
+        getDependencies( b ).add( a );
     }
 
     /**
@@ -73,30 +73,30 @@ public class DependencyMap<K, V>
      * 
      * @param parent
      *        The parent to get the dependents of.
-     * @return
+     * @return The non-null set of dependencies.
      */
-    public Set<K> getDependents( K parent )
+    public Set<K> getDependencies( K parent )
     {
-        Set<K> set = dependents.get( parent );
+        Set<K> set = dependencies.get( parent );
 
         if (set == null)
         {
             set = new HashSet<K>();
-            dependents.put( parent, set );
+            dependencies.put( parent, set );
         }
 
         return set;
     }
 
     /**
-     * Adds a value to the given key.
+     * Sets the value of the given key.
      * 
      * @param key
      *      The key.
      * @param value
      *      The value attached to the key.
      */
-    public void add( K key, V value )
+    public void put( K key, V value )
     {
         values.put( key, value );
     }
@@ -107,7 +107,7 @@ public class DependencyMap<K, V>
      * 
      * @return The reference to the collection of {@link DependencyNode}s.
      */
-    public Collection<DependencyNode<V>> getDependencyNodes()
+    public Collection<DependencyNode<V>> toNodes()
     {
         Map<K, DependencyNode<V>> nodeMap = new HashMap<K, DependencyNode<V>>();
 
@@ -120,17 +120,33 @@ public class DependencyMap<K, V>
         {
             DependencyNode<V> dn = e.getValue();
 
-            Set<K> deps = dependents.get( e.getKey() );
+            Set<K> deps = dependencies.get( e.getKey() );
 
             if (deps != null)
             {
                 for (K d : deps)
                 {
-                    dn.addDependent( nodeMap.get( d ) );
+                    dn.addDependency( nodeMap.get( d ) );
                 }
             }
         }
 
         return nodeMap.values();
     }
+    
+    /**
+     * Attempts to convert the value and dependencies in the map to a dependency
+     * tree and returns the {@link DependencyAnalyzer}.
+     * 
+     * @return The reference of the DependencyAnalyzer storing the tree.
+     */
+    public DependencyAnalyzer<V> toAnalyzer()
+    {
+    	DependencyAnalyzer<V> analyzer = new DependencyAnalyzer<V>();
+    	
+    	analyzer.analyze( toNodes() );
+    	
+    	return analyzer;
+    }
+    
 }

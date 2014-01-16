@@ -31,40 +31,40 @@ public class TestDependencyMap
 	public void testValid()
 	{
 	    DependencyMap<String, Integer> map = new DependencyMap<String, Integer>();
-	    map.add( "value0", 0 );
-	    map.add( "value1", 1 );
-	    map.add( "value2", 2 );
-	    map.add( "value3", 3 );
-	    map.add( "value4", 4 );
+	    map.put( "value0", 0 );
+	    map.put( "value1", 1 );
+	    map.put( "value2", 2 );
+	    map.put( "value3", 3 );
+	    map.put( "value4", 4 );
 	    map.addDependency( "value0", "value1" );
 	    map.addDependency( "value2", "value0" );
 	    map.addDependency( "value1", "value3" );
 	    map.addDependency( "value1", "value4" );
 		
-		DependencyGraph<Integer> graph = new DependencyGraph<Integer>();
-		graph.analyze( map.getDependencyNodes() );
+		DependencyAnalyzer<Integer> graph = new DependencyAnalyzer<Integer>();
+		graph.analyze( map.toNodes() );
 		
 		assertTrue( graph.isValid() );
-		assertEquals( Arrays.asList( 3, 4, 1, 0, 2 ), graph.getOutput() );
+		assertArrayEquals( new Integer[] { 3, 4, 1, 0, 2 }, graph.getOrdered() );
 	}
 	
 	@Test
 	public void testWholyCircular()
 	{
 	    DependencyMap<String, Integer> map = new DependencyMap<String, Integer>();
-        map.add( "value0", 0 );
-        map.add( "value1", 1 );
-        map.add( "value2", 2 );
-        map.add( "value3", 3 );
-        map.add( "value4", 4 );
+        map.put( "value0", 0 );
+        map.put( "value1", 1 );
+        map.put( "value2", 2 );
+        map.put( "value3", 3 );
+        map.put( "value4", 4 );
         map.addDependency( "value0", "value1" );
         map.addDependency( "value1", "value2" );
         map.addDependency( "value2", "value3" );
         map.addDependency( "value3", "value4" );
         map.addDependency( "value4", "value0" );
 	    
-		DependencyGraph<Integer> graph = new DependencyGraph<Integer>();
-		graph.analyze( map.getDependencyNodes() );
+		DependencyAnalyzer<Integer> graph = new DependencyAnalyzer<Integer>();
+		graph.analyze( map.toNodes() );
 		
 		assertFalse( graph.isValid() );
 	}
@@ -73,16 +73,16 @@ public class TestDependencyMap
 	public void testInterdependent()
 	{
 	    DependencyMap<String, Integer> map = new DependencyMap<String, Integer>();
-        map.add( "value0", 0 );
-        map.add( "value1", 1 );
-        map.add( "value2", 2 );
-        map.add( "value3", 3 );
-        map.add( "value4", 4 );
+        map.put( "value0", 0 );
+        map.put( "value1", 1 );
+        map.put( "value2", 2 );
+        map.put( "value3", 3 );
+        map.put( "value4", 4 );
         map.addDependency( "value1", "value0" );
         map.addDependency( "value0", "value1" );
 	    
-		DependencyGraph<Integer> graph = new DependencyGraph<Integer>();
-		graph.analyze( map.getDependencyNodes() );
+		DependencyAnalyzer<Integer> graph = new DependencyAnalyzer<Integer>();
+		graph.analyze( map.toNodes() );
 		
 		assertFalse( graph.isValid() );
 	}
@@ -91,18 +91,18 @@ public class TestDependencyMap
 	public void testPartialCircularDependency()
 	{
 	    DependencyMap<String, Integer> map = new DependencyMap<String, Integer>();
-        map.add( "value0", 0 );
-        map.add( "value1", 1 );
-        map.add( "value2", 2 );
-        map.add( "value3", 3 );
-        map.add( "value4", 4 );
+        map.put( "value0", 0 );
+        map.put( "value1", 1 );
+        map.put( "value2", 2 );
+        map.put( "value3", 3 );
+        map.put( "value4", 4 );
         map.addDependency( "value0", "value1" );
         map.addDependency( "value1", "value2" );
         map.addDependency( "value2", "value0" );
         map.addDependency( "value3", "value1" );
 		
-		DependencyGraph<Integer> graph = new DependencyGraph<Integer>();
-		graph.analyze( map.getDependencyNodes() );
+		DependencyAnalyzer<Integer> graph = new DependencyAnalyzer<Integer>();
+		graph.analyze( map.toNodes() );
 		
 		assertFalse( graph.isValid() );
 	}
@@ -111,27 +111,27 @@ public class TestDependencyMap
 	public void testGrouping()
 	{
 	    DependencyMap<String, Integer> map = new DependencyMap<String, Integer>();
-        map.add( "value0", 0 );
-        map.add( "value1", 1 );
-        map.add( "value2", 2 );
-        map.add( "value3", 3 );
-        map.add( "value4", 4 );
+        map.put( "value0", 0 );
+        map.put( "value1", 1 );
+        map.put( "value2", 2 );
+        map.put( "value3", 3 );
+        map.put( "value4", 4 );
         map.addDependency( "value0", "value1" );
         map.addDependency( "value2", "value0" );
         map.addDependency( "value1", "value3" );
         map.addDependency( "value1", "value4" );
 	    
-		DependencyGraph<Integer> graph = new DependencyGraph<Integer>();
-		graph.analyze( map.getDependencyNodes() );
+		DependencyAnalyzer<Integer> graph = new DependencyAnalyzer<Integer>();
+		graph.analyze( map.toNodes() );
 		
 		assertTrue( graph.isValid() );
 		
-		List<List<Integer>> groups = graph.getDepthGroups();
+		List<Integer>[] groups = graph.getLevels();
 		
-		assertEquals( Arrays.asList( 3, 4 ), groups.get( 0 ) );
-		assertEquals( Arrays.asList( 1 ), groups.get( 1 ) );
-		assertEquals( Arrays.asList( 0 ), groups.get( 2 ) );
-		assertEquals( Arrays.asList( 2 ), groups.get( 3 ) );
+		assertEquals( Arrays.asList( 3, 4 ), groups[ 0 ] );
+		assertEquals( Arrays.asList( 1 ), groups[ 1 ] );
+		assertEquals( Arrays.asList( 0 ), groups[ 2 ] );
+		assertEquals( Arrays.asList( 2 ), groups[ 3 ] );
 	}
 	
 }
