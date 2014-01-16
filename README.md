@@ -31,6 +31,6 @@ assertEquals( Arrays.asList( 3, 4, 1, 0, 2 ), graph.getOrdered() );
 - [dependz-1.0.jar](https://github.com/ClickerMonkey/Dependz/raw/master/build/dependz-1.0.jar)
 - [dependz-src-1.0.jar](https://github.com/ClickerMonkey/Dependz/raw/master/build/dependz-1.0-src.jar) - includes source code
 
-#### Projects using Dependz:
+#### Projects using Dependz
 
 - [Rekord](https://github.com/ClickerMonkey/Rekord)
