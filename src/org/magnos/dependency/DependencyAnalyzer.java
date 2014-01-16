@@ -17,6 +17,7 @@
 package org.magnos.dependency;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class DependencyAnalyzer<T>
 	 * @return True if the graph was sorted, false if there was a cycle.
 	 * @see DependencyAnalyzer
 	 */
-	public boolean analyze( Collection<DependencyNode<T>> nodeCollection )
+	public boolean analyze( Collection<DependencyNode<T>> nodeCollection, T ... emptyArray )
 	{
 		final int N = nodeCollection.size();
 
@@ -71,7 +72,7 @@ public class DependencyAnalyzer<T>
 		cycle = new DependencyNode[N];
 		cycleSize = 0;
 
-		ordered = (T[])new Object[N];
+		ordered = Arrays.copyOf( emptyArray, N );
 		orderedNodes = new DependencyNode[N];
 		orderedSize = 0;
 
