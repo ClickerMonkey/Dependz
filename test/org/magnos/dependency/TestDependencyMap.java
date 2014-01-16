@@ -41,11 +41,11 @@ public class TestDependencyMap
 	    map.addDependency( "value1", "value3" );
 	    map.addDependency( "value1", "value4" );
 		
-		DependencyAnalyzer<Integer> graph = new DependencyAnalyzer<Integer>();
-		graph.analyze( map.toNodes() );
+		DependencyAnalyzer<Integer> analyzer = new DependencyAnalyzer<Integer>();
+		analyzer.analyze( map.toNodes() );
 		
-		assertTrue( graph.isValid() );
-		assertArrayEquals( new Integer[] { 3, 4, 1, 0, 2 }, graph.getOrdered() );
+		assertTrue( analyzer.isValid() );
+		assertArrayEquals( new Integer[] { 3, 4, 1, 0, 2 }, analyzer.getOrdered() );
 	}
 	
 	@Test
@@ -63,10 +63,10 @@ public class TestDependencyMap
         map.addDependency( "value3", "value4" );
         map.addDependency( "value4", "value0" );
 	    
-		DependencyAnalyzer<Integer> graph = new DependencyAnalyzer<Integer>();
-		graph.analyze( map.toNodes() );
+		DependencyAnalyzer<Integer> analyzer = new DependencyAnalyzer<Integer>();
+		analyzer.analyze( map.toNodes() );
 		
-		assertFalse( graph.isValid() );
+		assertFalse( analyzer.isValid() );
 	}
 	
 	@Test
@@ -81,10 +81,10 @@ public class TestDependencyMap
         map.addDependency( "value1", "value0" );
         map.addDependency( "value0", "value1" );
 	    
-		DependencyAnalyzer<Integer> graph = new DependencyAnalyzer<Integer>();
-		graph.analyze( map.toNodes() );
+		DependencyAnalyzer<Integer> analyzer = new DependencyAnalyzer<Integer>();
+		analyzer.analyze( map.toNodes() );
 		
-		assertFalse( graph.isValid() );
+		assertFalse( analyzer.isValid() );
 	}
 	
 	@Test
@@ -101,10 +101,10 @@ public class TestDependencyMap
         map.addDependency( "value2", "value0" );
         map.addDependency( "value3", "value1" );
 		
-		DependencyAnalyzer<Integer> graph = new DependencyAnalyzer<Integer>();
-		graph.analyze( map.toNodes() );
+		DependencyAnalyzer<Integer> analyzer = new DependencyAnalyzer<Integer>();
+		analyzer.analyze( map.toNodes() );
 		
-		assertFalse( graph.isValid() );
+		assertFalse( analyzer.isValid() );
 	}
 	
 	@Test
@@ -121,12 +121,12 @@ public class TestDependencyMap
         map.addDependency( "value1", "value3" );
         map.addDependency( "value1", "value4" );
 	    
-		DependencyAnalyzer<Integer> graph = new DependencyAnalyzer<Integer>();
-		graph.analyze( map.toNodes() );
+		DependencyAnalyzer<Integer> analyzer = new DependencyAnalyzer<Integer>();
+		analyzer.analyze( map.toNodes() );
 		
-		assertTrue( graph.isValid() );
+		assertTrue( analyzer.isValid() );
 		
-		List<Integer>[] groups = graph.getLevels();
+		List<Integer>[] groups = analyzer.getLevels();
 		
 		assertEquals( Arrays.asList( 3, 4 ), groups[ 0 ] );
 		assertEquals( Arrays.asList( 1 ), groups[ 1 ] );

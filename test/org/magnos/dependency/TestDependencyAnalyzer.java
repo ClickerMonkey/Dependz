@@ -26,7 +26,7 @@ import org.magnos.dependency.DependencyAnalyzer;
 import org.magnos.dependency.DependencyNode;
 
 
-public class TestDependencyGraph
+public class TestDependencyAnalyzer
 {
 	
 	@Test
@@ -43,15 +43,15 @@ public class TestDependencyGraph
 		value1.addDependency( value3 );
 		value1.addDependency( value4 );
 		
-		DependencyAnalyzer<String> graph = new DependencyAnalyzer<String>();
-		graph.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
+		DependencyAnalyzer<String> analyzer = new DependencyAnalyzer<String>();
+		analyzer.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
 		
-		assertTrue( graph.isValid() );
-		assertSame( value3, graph.getOrderedNodes()[ 0 ] );
-		assertSame( value4, graph.getOrderedNodes()[ 1 ] );
-		assertSame( value1, graph.getOrderedNodes()[ 2 ] );
-		assertSame( value0, graph.getOrderedNodes()[ 3 ] );
-		assertSame( value2, graph.getOrderedNodes()[ 4 ] );
+		assertTrue( analyzer.isValid() );
+		assertSame( value3, analyzer.getOrderedNodes()[ 0 ] );
+		assertSame( value4, analyzer.getOrderedNodes()[ 1 ] );
+		assertSame( value1, analyzer.getOrderedNodes()[ 2 ] );
+		assertSame( value0, analyzer.getOrderedNodes()[ 3 ] );
+		assertSame( value2, analyzer.getOrderedNodes()[ 4 ] );
 	}
 	
 	@Test
@@ -69,10 +69,10 @@ public class TestDependencyGraph
 		value3.addDependency( value4 );
 		value4.addDependency( value0 );
 		
-		DependencyAnalyzer<String> graph = new DependencyAnalyzer<String>();
-		graph.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
+		DependencyAnalyzer<String> analyzer = new DependencyAnalyzer<String>();
+		analyzer.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
 		
-		assertFalse( graph.isValid() );
+		assertFalse( analyzer.isValid() );
 	}
 	
 	@Test
@@ -87,10 +87,10 @@ public class TestDependencyGraph
 		value0.addDependency( value1 );
 		value1.addDependency( value0 );
 		
-		DependencyAnalyzer<String> graph = new DependencyAnalyzer<String>();
-		graph.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
+		DependencyAnalyzer<String> analyzer = new DependencyAnalyzer<String>();
+		analyzer.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
 		
-		assertFalse( graph.isValid() );
+		assertFalse( analyzer.isValid() );
 	}
 	
 	@Test
@@ -107,10 +107,10 @@ public class TestDependencyGraph
 		value2.addDependency( value0 );
 		value3.addDependency( value1 );
 		
-		DependencyAnalyzer<String> graph = new DependencyAnalyzer<String>();
-		graph.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
+		DependencyAnalyzer<String> analyzer = new DependencyAnalyzer<String>();
+		analyzer.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
 		
-		assertFalse( graph.isValid() );
+		assertFalse( analyzer.isValid() );
 	}
 	
 	@Test
@@ -127,12 +127,12 @@ public class TestDependencyGraph
 		value1.addDependency( value3 );
 		value1.addDependency( value4 );
 		
-		DependencyAnalyzer<String> graph = new DependencyAnalyzer<String>();
-		graph.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
+		DependencyAnalyzer<String> analyzer = new DependencyAnalyzer<String>();
+		analyzer.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
 		
-		assertTrue( graph.isValid() );
+		assertTrue( analyzer.isValid() );
 		
-		List<DependencyNode<String>>[] groups = graph.getLevelNodes();
+		List<DependencyNode<String>>[] groups = analyzer.getLevelNodes();
 		
 		assertEquals( Arrays.asList( value3, value4 ), groups[ 0 ] );
 		assertEquals( Arrays.asList( value1 ), groups[ 1 ] );
@@ -154,12 +154,12 @@ public class TestDependencyGraph
 		value1.addDependency( value3 );
 		value1.addDependency( value4 );
 		
-		DependencyAnalyzer<String> graph = new DependencyAnalyzer<String>();
-		graph.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
+		DependencyAnalyzer<String> analyzer = new DependencyAnalyzer<String>();
+		analyzer.analyze( Arrays.asList( value0, value1, value2, value3, value4 ) );
 		
-		assertTrue( graph.isValid() );
+		assertTrue( analyzer.isValid() );
 		
-		List<String>[] groups = graph.getLevels();
+		List<String>[] groups = analyzer.getLevels();
 		
 		assertEquals( Arrays.asList( "value3", "value4" ), groups[ 0 ] );
 		assertEquals( Arrays.asList( "value1" ), groups[ 1 ] );
