@@ -21,8 +21,7 @@ map.addDependency( "value2", "value0" );
 map.addDependency( "value1", "value3" );
 map.addDependency( "value1", "value4" );
         
-DependencyAnalyzer<Integer> analyzer = new DependencyAnalyzer<Integer>();
-analyzer.analyze( map.getDependencyNodes() );
+DependencyAnalyzer<Integer> analyzer = map.toAnalyzer();
 
 assertTrue( analyzer.isValid() );
 assertEquals( Arrays.asList( 3, 4, 1, 0, 2 ), graph.getOrdered() );
