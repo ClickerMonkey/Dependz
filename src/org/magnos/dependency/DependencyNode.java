@@ -88,6 +88,20 @@ public class DependencyNode<T> implements Serializable
 	}
 	
 	/**
+	 * Adds <code>this</code> as a dependency to each of the given nodes.
+	 * 
+	 * @param dependentsArray
+	 *         The array of dependents of this node.
+	 */
+	public void addDependents( DependencyNode<T> ... dependentsArray )
+	{
+	    for (DependencyNode<T> dn : dependentsArray)
+	    {
+	        dn.addDependency( this );
+	    }
+	}
+	
+	/**
 	 * Removes the given dependency from this node.
 	 * 
 	 * @param dependency

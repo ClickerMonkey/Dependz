@@ -61,11 +61,35 @@ public class DependencyMap<K, V>
     }
 
     /**
+     * States that <code>a</code> depends on all things in <code>b</code>.
+     */
+    public void addDependencies( K a, K ... b )
+    {
+        Set<K> dependencies = getDependencies( a );
+        
+        for (K dn : b)
+        {
+            dependencies.add( dn );
+        }
+    }
+
+    /**
      * States that <code>b</code> depends on <code>a</code>.
      */
     public void addDependent( K a, K b )
     {
         getDependencies( b ).add( a );
+    }
+
+    /**
+     * States that all things in <code>b</code> depends on <code>a</code>.
+     */
+    public void addDependents( K a, K ... b )
+    {
+        for (K dn : b)
+        {
+            getDependencies( dn ).add( a );
+        }
     }
 
     /**
